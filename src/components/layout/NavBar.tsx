@@ -28,7 +28,7 @@ const NavBar = () => {
     }, [isSmScreen]);
 
     return (
-        <div className='text-foreground flex h-[60px] w-full items-center justify-between bg-green500 px-[24] sm:px-[32px]'>
+        <div className='fixed relative z-999 text-foreground flex h-[60px] w-full items-center justify-between bg-green500 px-[24] sm:px-[32px]'>
             <div className='h-fit w-[69px] '>
                 <p className='font-[Castoro] text-[20px] italic text-white'>a Board</p>
             </div>
