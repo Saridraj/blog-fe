@@ -5,15 +5,19 @@ import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+
 import { ArrowLeft } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import CommentLists from '@/components/comment/CommentList';
-import { redirect } from 'next/navigation';
-export default function PostDescription({
-  params,
-}: {
-  params: { postId: number };
-}) {
+import { redirect, useParams } from 'next/navigation';
+export default function PostDescription () {
+  const [clickAddComment, setClickAddComment] = React.useState(false);
+  console.log(clickAddComment);
+  const handleAddCommentClick = () => {
+    setClickAddComment(!clickAddComment);
+  };
+
   const post = [
     {
       id: 1,
@@ -87,8 +91,9 @@ export default function PostDescription({
     ...p,
     comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
   }));
-
-  const postData = posts.find((p) => p.id == Number(params.postId));
+  const params = useParams();
+  const postId = params?.postId;
+  const postData = posts.find((p) => p.id == Number(postId));
 
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
@@ -124,15 +129,36 @@ export default function PostDescription({
                 </p>
               </div>
               <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                <MessageCircle className='w-[16px] mr-1' />
+                <MessageCircle className='mr-1 w-[16px]' />
                 {postData?.comments.length} comments
               </div>
             </div>
-            <div className='mt-8'>
-              <Button className='border border-success text-success'>
-                Add Comments
-              </Button>
-            </div>
+            {!clickAddComment ? (
+              <>
+                <div className='mt-8'>
+                  <Button
+                    onClick={handleAddCommentClick}
+                    className='border border-success text-success'
+                  >
+                    Add Comment
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <Textarea
+                    className='h-[100px] mt-2'
+                    placeholder='What’s on your mind...'
+                  />
+                  <div className='flex justify-end mt-2'>
+                    <Button onClick={handleAddCommentClick} className='border border-success text-success mr-2 w-[105px] h-[40px]'>Cancel</Button>
+                    <Button className='bg-success text-white w-[105px] h-[40px]'>Post</Button>
+                  </div>
+                </div>
+              </>
+            )}
+
             <div className='mt-8'>
               <CommentLists commentLists={postData?.comments} />
             </div>
