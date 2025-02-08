@@ -1,6 +1,45 @@
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import api from '@/lib/api';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 export default async function SignIn() {
+
+  const signIn = async (formData: FormData) => {
+    'use server';
+
+    const username = formData.get('username') as string;
+    const password = formData.get('password') as string;
+    const cookieStore = await cookies();
+
+    try {
+      const response = await api.post('/auth/signIn', {
+        username,
+        password,
+      });
+
+      if (response.data) {
+        const {
+          token,
+          username,
+          id
+        } = response.data;
+        cookieStore.set('accessToken', token);
+        cookieStore.set('username', username);
+        cookieStore.set('userId', id);
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        console.log("Redirecting to home...");
+       
+      }
+  
+    } catch (error) {
+      console.log(error);
+    }
+    return redirect(`/`);
+  };
+
+
   return (
     <div className='h-screen justify-end bg-green500 md:flex'>
       <div className='flex h-[40%] md:h-full w-full md:w-[40%] rounded-b-[20px] md:rounded-l-[20px] bg-green300 md:hidden'>
@@ -23,7 +62,7 @@ export default async function SignIn() {
             />
           </div>
 
-          <Button className='h-[44px] w-[384px] bg-success text-white'>
+          <Button formAction={signIn} className='h-[44px] w-[384px] bg-success text-white'>
             Sign in
           </Button>
         </form>

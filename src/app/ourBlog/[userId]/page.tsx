@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
@@ -8,9 +8,7 @@ import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useParams } from 'next/navigation';
-import {
-  ChevronDown,
-} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,6 +28,10 @@ import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import OurBlogPostLists from '@/components/post/OurBlogPostList';
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
+import { fetchPostOfUser } from '@/lib/postActions';
+import { fetchAllComment } from '@/lib/commentActions';
+import { fetchAllUser } from '@/lib/userActions';
+
 export default function OurBlog() {
   // const [showHistory, setShowHistory] = React.useState<Checked>(true);
   // const [showFood, setShowFood] = React.useState<Checked>(false);
@@ -47,93 +49,44 @@ export default function OurBlog() {
     { key: 'showExercise', label: 'Exercise' },
     { key: 'showOthers', label: 'Others' },
   ];
-  const [selectedCommunity, setSelectedCommunity] = useState<
-    string | null
-  >(null);
+  const [selectedCommunity, setSelectedCommunity] = useState<string | null>(
+    null
+  );
 
-  // const toggleCommunity = (key: string, checked: boolean) => {
-  //   setSelectedCommunity((prev) => ({ ...prev, [key]: checked }));
-  // };
+  const getCookie = (name: string) => {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
+  };
+  const id = getCookie('userId');
 
-  const post = [
-    {
-      id: 1,
-      topic: '1 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-      createdBy: 1,
-    },
-    {
-      id: 2,
-      topic: '2 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Food',
-      createdBy: 1,
-    },
-    {
-      id: 3,
-      topic: '3 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-      createdBy: 2,
-    },
-    {
-      id: 4,
-      topic: '4 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Pets',
-      createdBy: 2,
-    },
-  ];
+  const [post, setPost] = useState<any[]>([]);
+  const [user, setUser] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  console.log(post);
 
-  const comments = [
-    {
-      id: 1,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username1',
-      postId: 1,
-    },
-    {
-      id: 2,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username1',
-      postId: 1,
-    },
-    {
-      id: 3,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username2',
-      postId: 2,
-    },
-    {
-      id: 4,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username2',
-      postId: 3,
-    },
-    {
-      id: 5,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username2',
-      postId: 4,
-    },
-  ];
+  useEffect(() => {
+    if (id) {
+      fetchPostOfUser(id).then((posts) => {
+        setPost(posts);
+      });
+    }
+
+    fetchAllComment().then((comments) => {
+      setComments(comments);
+    });
+    fetchAllUser().then((users) => {
+      setUser(users);
+    });
+  }, []);
+
   const params = useParams();
-    const userId = params?.userId;
+  const userId = params?.userId;
 
   const posts = post.map((p) => ({
     ...p,
     comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
-  }))
+  }));
   const userPosts = posts.filter((p) => p.createdBy === Number(userId));
 
   console.log(posts);
@@ -195,7 +148,7 @@ export default function OurBlog() {
                     <DialogDescription className='h-full w-full'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button className='flex h-[40px] w-full sm:w-[195px] items-center border border-success p-1 text-[14px] text-success'>
+                          <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
                             <p className='text-[14px]'>Choose a community</p>{' '}
                             <ChevronDown className='w-[16px]' />
                           </Button>
@@ -222,11 +175,11 @@ export default function OurBlog() {
                         className='my-3 h-[234px] max-w-[625px]'
                         placeholder='What’s on your mind...'
                       />
-                      <div className='flex flex-col sm:flex-row sm:h-[40px] sm:justify-end  sm:gap-2'>
+                      <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
                         <DialogClose className='mb-[24px] h-[24px]'>
                           <Button
                             // onClick={() => redirect('/signIn')}
-                            className='h-[40px] w-full  sm:w-[105px] border border-success text-success'
+                            className='h-[40px] w-full border border-success text-success sm:w-[105px]'
                           >
                             Cancel
                           </Button>
@@ -234,7 +187,7 @@ export default function OurBlog() {
 
                         <Button
                           // onClick={() => redirect('/signIn')}
-                          className='h-[40px] w-full sm:w-[105px] bg-success text-white sm:flex'
+                          className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
                         >
                           Post
                         </Button>
@@ -247,7 +200,7 @@ export default function OurBlog() {
           </div>
           <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
             <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
-              <OurBlogPostLists postLists={userPosts} />
+              <OurBlogPostLists postLists={posts} />
             </div>
           </div>
         </div>

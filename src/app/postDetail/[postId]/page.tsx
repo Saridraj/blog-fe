@@ -25,6 +25,7 @@ export default function PostDescription () {
       content:
         'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
       community: 'History',
+      createdBy: 1,
     },
     {
       id: 2,

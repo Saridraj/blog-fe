@@ -12,6 +12,7 @@ import {
   DialogClose,
 } from '../ui/Dialog';
 import { useState, useEffect } from 'react';
+import { parseCookies } from 'nookies';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -35,14 +35,12 @@ import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import PostLists from '@/components/post/PostList';
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
+import { useState, useEffect } from 'react';
+import { fetchAllPost } from '@/lib/postActions';
+import { fetchAllComment } from '@/lib/commentActions';
+import { fetchAllUser } from '@/lib/userActions';
+
 export default function Home() {
-  // const [showHistory, setShowHistory] = React.useState<Checked>(true);
-  // const [showFood, setShowFood] = React.useState<Checked>(false);
-  // const [showPets, setShowPets] = React.useState<Checked>(false);
-  // const [showHealth, setShowHealth] = React.useState<Checked>(false);
-  // const [showFashion, setShowFashion] = React.useState<Checked>(false);
-  // const [showExercise, setShowExercise] = React.useState<Checked>(false);
-  // const [showOthers, setShowOthers] = React.useState<Checked>(false);
   const community = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },
@@ -55,84 +53,68 @@ export default function Home() {
   const [selectedCommunity, setSelectedCommunity] = React.useState<
     string | null
   >(null);
+  const [post, setPost] = useState<any[]>([]);
+  const [user, setUser] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
 
-  // const toggleCommunity = (key: string, checked: boolean) => {
-  //   setSelectedCommunity((prev) => ({ ...prev, [key]: checked }));
-  // };
+  useEffect(() => {
+    fetchAllPost().then((posts) => {
+      console.log(posts);
+      setPost(posts);
+    });
+    fetchAllUser().then((users) => {
+      setUser(users);
+    });
+    fetchAllComment().then((comments) => {
+      setComments(comments);
+    });
+  }, []);
 
-  const post = [
-    {
-      id: 1,
-      topic: '1 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-    },
-    {
-      id: 2,
-      topic: '2 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Food',
-    },
-    {
-      id: 3,
-      topic: '3 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-    },
-    {
-      id: 4,
-      topic: '4 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Pets',
-    },
-  ];
+  // const comments = [
+  //   {
+  //     id: 1,
+  //     comment:
+  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
+  //     createdBy: 'username',
+  //     postId: 1,
+  //   },
+  //   {
+  //     id: 2,
+  //     comment:
+  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
+  //     createdBy: 'username',
+  //     postId: 1,
+  //   },
+  //   {
+  //     id: 3,
+  //     comment:
+  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
+  //     createdBy: 'username',
+  //     postId: 2,
+  //   },
+  //   {
+  //     id: 4,
+  //     comment:
+  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
+  //     createdBy: 'username',
+  //     postId: 3,
+  //   },
+  //   {
+  //     id: 5,
+  //     comment:
+  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
+  //     createdBy: 'username',
+  //     postId: 4,
+  //   },
+  // ];
 
-  const comments = [
-    {
-      id: 1,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 1,
-    },
-    {
-      id: 2,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 1,
-    },
-    {
-      id: 3,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 2,
-    },
-    {
-      id: 4,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 3,
-    },
-    {
-      id: 5,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 4,
-    },
-  ];
-
-  const posts = post.map((p) => ({
+  const posts = post?.map((p) => ({
     ...p,
     comments: comments.filter((c) => c.postId === p.id),
+    createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
+
+  console.log(posts);
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
       <NavBar />
@@ -218,20 +200,14 @@ export default function Home() {
                         className='my-3 h-[234px] max-w-[625px]'
                         placeholder='What’s on your mind...'
                       />
-                      <div className='flex flex-col sm:flex-row sm:h-[40px] sm:justify-end sm:gap-2'>
+                      <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
                         <DialogClose className='mb-[24px] h-[24px]'>
-                          <Button
-                            // onClick={() => redirect('/signIn')}
-                            className='h-[40px] w-full border border-success text-success sm:w-[105px]'
-                          >
+                          <Button className='h-[40px] w-full border border-success text-success sm:w-[105px]'>
                             Cancel
                           </Button>
                         </DialogClose>
 
-                        <Button
-                          // onClick={() => redirect('/signIn')}
-                          className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
-                        >
+                        <Button className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'>
                           Post
                         </Button>
                       </div>
