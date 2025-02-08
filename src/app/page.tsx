@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import {
   Menu,
   ArrowRight,
@@ -21,18 +22,43 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/Dialog';
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import PostLists from '@/components/post/PostList';
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
 export default function Home() {
-  const [showHistory, setShowHistory] = React.useState<Checked>(true);
-  const [showFood, setShowFood] = React.useState<Checked>(false);
-  const [showPets, setShowPets] = React.useState<Checked>(false);
-  const [showHealth, setShowHealth] = React.useState<Checked>(false);
-  const [showFashion, setShowFashion] = React.useState<Checked>(false);
-  const [showExercise, setShowExercise] = React.useState<Checked>(false);
-  const [showOthers, setShowOthers] = React.useState<Checked>(false);
+  // const [showHistory, setShowHistory] = React.useState<Checked>(true);
+  // const [showFood, setShowFood] = React.useState<Checked>(false);
+  // const [showPets, setShowPets] = React.useState<Checked>(false);
+  // const [showHealth, setShowHealth] = React.useState<Checked>(false);
+  // const [showFashion, setShowFashion] = React.useState<Checked>(false);
+  // const [showExercise, setShowExercise] = React.useState<Checked>(false);
+  // const [showOthers, setShowOthers] = React.useState<Checked>(false);
+  const community = [
+    { key: 'showHistory', label: 'History' },
+    { key: 'showFood', label: 'Food' },
+    { key: 'showPets', label: 'Pets' },
+    { key: 'showHealth', label: 'Health' },
+    { key: 'showFashion', label: 'Fashion' },
+    { key: 'showExercise', label: 'Exercise' },
+    { key: 'showOthers', label: 'Others' },
+  ];
+  const [selectedCommunity, setSelectedCommunity] = React.useState<
+    string | null
+  >(null);
+
+  // const toggleCommunity = (key: string, checked: boolean) => {
+  //   setSelectedCommunity((prev) => ({ ...prev, [key]: checked }));
+  // };
 
   const post = [
     {
@@ -103,13 +129,12 @@ export default function Home() {
     },
   ];
 
-
-  const posts = post.map(p => ({
+  const posts = post.map((p) => ({
     ...p,
-    comments: comments.filter(c => c.postId === p.id) // Attach matching comments
+    comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
   }));
 
-  console.log(posts)
+  console.log(posts);
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
       <NavBar />
@@ -128,244 +153,99 @@ export default function Home() {
               <div className='h-full w-[128px]'>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <div className='flex h-full items-center p-1'>
+                    <div className='flex h-full cursor-pointer items-center p-1'>
                       <p className='text-[14px]'>Community</p>{' '}
                       <ChevronDown className='w-[16px]' />
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className='w-56 bg-white'>
-                    <DropdownMenuCheckboxItem
-                      checked={showHistory}
-                      onCheckedChange={(checked) => setShowHistory(checked)}
-                    >
-                      History
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showFood}
-                      onCheckedChange={(checked) => setShowFood(checked)}
-                    >
-                      Food
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showPets}
-                      onCheckedChange={(checked) => setShowPets(checked)}
-                    >
-                      Pets
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showHealth}
-                      onCheckedChange={(checked) => setShowHealth(checked)}
-                    >
-                      Health
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showFashion}
-                      onCheckedChange={(checked) => setShowFashion(checked)}
-                    >
-                      Fashion
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showExercise}
-                      onCheckedChange={(checked) => setShowExercise(checked)}
-                    >
-                      Exercise
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem
-                      checked={showOthers}
-                      onCheckedChange={(checked) => setShowOthers(checked)}
-                    >
-                      Others
-                    </DropdownMenuCheckboxItem>
+                    {community.map(({ key, label }) => (
+                      <DropdownMenuCheckboxItem
+                        key={key}
+                        checked={selectedCommunity === key}
+                        onCheckedChange={(checked) =>
+                          setSelectedCommunity(checked ? key : null)
+                        }
+                      >
+                        {label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div className='h-full w-[105px]'>
-                <Button className='h-[40px] bg-success sm:w-[105px]'>
-                  <p className='hidden text-[14px] text-white sm:flex'>
-                    Create +
-                  </p>
-                  <p className='text-white sm:hidden'>+</p>
-                </Button>
-              </div>
+              <Dialog>
+                <DialogTrigger>
+                  <div className='h-full w-[105px]'>
+                    <Button className='h-[40px] bg-success sm:w-[105px]'>
+                      <div className='hidden text-[14px] text-white sm:flex'>
+                        Create +
+                      </div>
+                      <div className='text-white sm:hidden'>+</div>
+                    </Button>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className='h-fit w-[90%] bg-white sm:max-w-[685px]'>
+                  <DialogHeader>
+                    <DialogTitle className='flex justify-start text-[28px]'>
+                      Create Post
+                    </DialogTitle>
+
+                    <DialogDescription className='h-full w-full'>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button className='flex h-[40px] w-full sm:w-[195px] items-center border border-success p-1 text-[14px] text-success'>
+                            <p className='text-[14px]'>Choose a community</p>{' '}
+                            <ChevronDown className='w-[16px]' />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className='w-56 bg-white'>
+                          {community.map(({ key, label }) => (
+                            <DropdownMenuCheckboxItem
+                              key={key}
+                              checked={selectedCommunity === key}
+                              onCheckedChange={(checked) =>
+                                setSelectedCommunity(checked ? key : null)
+                              }
+                            >
+                              {label}
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                      <Input
+                        className='my-3 h-[44px] max-w-[625px]'
+                        placeholder='Title'
+                      />
+                      <Textarea
+                        className='my-3 h-[234px] max-w-[625px]'
+                        placeholder='What’s on your mind...'
+                      />
+                      <div className='flex flex-col sm:h-[40px] sm:justify-end  sm:gap-2'>
+                        <DialogClose className='mb-[24px] h-[24px]'>
+                          <Button
+                            // onClick={() => redirect('/signIn')}
+                            className='h-[40px] w-full  sm:w-[105px] border border-success text-success'
+                          >
+                            Cancel
+                          </Button>
+                        </DialogClose>
+
+                        <Button
+                          // onClick={() => redirect('/signIn')}
+                          className='h-[40px] w-full sm:w-[105px] bg-success text-white sm:flex'
+                        >
+                          SignIn
+                        </Button>
+                      </div>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
             <div className='min-h-[1000px] rounded-[16px] border-none bg-white stroke-none'>
-              <PostLists postLists={posts}/>
-              {/* <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div>
-              <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div>
-              <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div>
-              <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div>
-              <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div>
-              <div className='h-[200px] w-full border p-[20px]'>
-                <div className='flex h-[31px] w-full items-center'>
-                  <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                  <p>username</p>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-                    <p className='text-[12px]'>History</p>
-                  </div>
-                </div>
-                <div className='mt-[8px] h-[24px] w-full'>
-                  <p className='text-[16px truncate font-semibold'>
-                    The Beginning of the End of the World
-                  </p>
-                </div>
-                <div className='h-[30px] w-full overflow-hidden'>
-                  <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-                    The afterlife sitcom The Good Place comes to its
-                    culmination, the show’s two protagonists, Eleanor and Chidi,
-                    contemplate their future. Having lived thousands upon
-                    thousands of lifetimes together, and having experienced
-                    virtually everything this life has to offer sadsadsd
-                    sdasdssadsadsd
-                  </p>
-                </div>
-                <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-                  <MessageCircle className='w-[16px]' /> ... comments
-                </div>
-              </div> */}
+              <PostLists postLists={posts} />
             </div>
           </div>
         </div>
