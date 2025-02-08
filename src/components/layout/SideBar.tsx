@@ -1,13 +1,19 @@
 import { Menu, ArrowRight, SquarePen, House } from 'lucide-react';
-
+import { redirect } from 'next/navigation';
 const SideBar = () => {
   return (
     <div className='hidden h-full w-[290px] bg-gray100 p-[32px] sm:flex sm:flex-col'>
-      <div className='flex h-[40px] w-[290px] items-center'>
+      <div
+        onClick={() => redirect('/')}
+        className='flex h-[40px] w-[290px] items-center cursor-pointer'
+      >
         <House className='mr-2 text-[24px]' />{' '}
         <p className='text-[16px]'>Home</p>
       </div>
-      <div className='flex h-[40px] w-[290px] items-center'>
+      <div
+        onClick={() => redirect(`/ourBlog/${1}`)}
+        className='flex h-[40px] w-[290px] items-center cursor-pointer'
+      >
         <SquarePen className='mr-2 text-[24px]' />{' '}
         <p className='text-[16px]'>Our Blog</p>
       </div>

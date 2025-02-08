@@ -1,25 +1,20 @@
 'use client';
 import * as React from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
+import { useParams } from 'next/navigation';
 import {
-  Menu,
-  ArrowRight,
-  SquarePen,
-  House,
-  MessageCircle,
   ChevronDown,
 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import {
@@ -32,10 +27,10 @@ import {
   DialogClose,
 } from '@/components/ui/Dialog';
 import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
-import PostLists from '@/components/post/PostList';
+import OurBlogPostLists from '@/components/post/OurBlogPostList';
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
-export default function Home() {
+export default function OurBlog() {
   // const [showHistory, setShowHistory] = React.useState<Checked>(true);
   // const [showFood, setShowFood] = React.useState<Checked>(false);
   // const [showPets, setShowPets] = React.useState<Checked>(false);
@@ -52,7 +47,7 @@ export default function Home() {
     { key: 'showExercise', label: 'Exercise' },
     { key: 'showOthers', label: 'Others' },
   ];
-  const [selectedCommunity, setSelectedCommunity] = React.useState<
+  const [selectedCommunity, setSelectedCommunity] = useState<
     string | null
   >(null);
 
@@ -67,6 +62,7 @@ export default function Home() {
       content:
         'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
       community: 'History',
+      createdBy: 1,
     },
     {
       id: 2,
@@ -74,6 +70,7 @@ export default function Home() {
       content:
         'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
       community: 'Food',
+      createdBy: 1,
     },
     {
       id: 3,
@@ -81,6 +78,7 @@ export default function Home() {
       content:
         'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
       community: 'History',
+      createdBy: 2,
     },
     {
       id: 4,
@@ -88,6 +86,7 @@ export default function Home() {
       content:
         'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
       community: 'Pets',
+      createdBy: 2,
     },
   ];
 
@@ -96,43 +95,48 @@ export default function Home() {
       id: 1,
       comment:
         'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
+      createdBy: 'username1',
       postId: 1,
     },
     {
       id: 2,
       comment:
         'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
+      createdBy: 'username1',
       postId: 1,
     },
     {
       id: 3,
       comment:
         'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
+      createdBy: 'username2',
       postId: 2,
     },
     {
       id: 4,
       comment:
         'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
+      createdBy: 'username2',
       postId: 3,
     },
     {
       id: 5,
       comment:
         'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
+      createdBy: 'username2',
       postId: 4,
     },
   ];
+  const params = useParams();
+    const userId = params?.userId;
 
   const posts = post.map((p) => ({
     ...p,
-    comments: comments.filter((c) => c.postId === p.id),
-  }));
+    comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
+  }))
+  const userPosts = posts.filter((p) => p.createdBy === Number(userId));
+
+  console.log(posts);
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
       <NavBar />
@@ -191,7 +195,7 @@ export default function Home() {
                     <DialogDescription className='h-full w-full'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
+                          <Button className='flex h-[40px] w-full sm:w-[195px] items-center border border-success p-1 text-[14px] text-success'>
                             <p className='text-[14px]'>Choose a community</p>{' '}
                             <ChevronDown className='w-[16px]' />
                           </Button>
@@ -218,11 +222,11 @@ export default function Home() {
                         className='my-3 h-[234px] max-w-[625px]'
                         placeholder='What’s on your mind...'
                       />
-                      <div className='flex flex-col sm:flex-row sm:h-[40px] sm:justify-end sm:gap-2'>
+                      <div className='flex flex-col sm:flex-row sm:h-[40px] sm:justify-end  sm:gap-2'>
                         <DialogClose className='mb-[24px] h-[24px]'>
                           <Button
                             // onClick={() => redirect('/signIn')}
-                            className='h-[40px] w-full border border-success text-success sm:w-[105px]'
+                            className='h-[40px] w-full  sm:w-[105px] border border-success text-success'
                           >
                             Cancel
                           </Button>
@@ -230,7 +234,7 @@ export default function Home() {
 
                         <Button
                           // onClick={() => redirect('/signIn')}
-                          className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
+                          className='h-[40px] w-full sm:w-[105px] bg-success text-white sm:flex'
                         >
                           Post
                         </Button>
@@ -243,7 +247,7 @@ export default function Home() {
           </div>
           <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
             <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
-              <PostLists postLists={posts} />
+              <OurBlogPostLists postLists={userPosts} />
             </div>
           </div>
         </div>

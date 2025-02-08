@@ -1,17 +1,16 @@
-import PostCard from './PostCard';
+import OurBlogPostCard from './OurBlogPostCard';
 
 
-const PostLists = ({ postLists}: any) => {
+const OurBlogPostLists = ({ postLists}: any) => {
  
   return (
     <div>
       <div className='flex w-full flex-wrap'>
         {postLists.map((postList: any) => (
           
-          <PostCard
+          <OurBlogPostCard
             key={postList.id}
             postList={postList}
-            ourBlogList={true}
           />
         ))}
       </div>
@@ -19,4 +18,4 @@ const PostLists = ({ postLists}: any) => {
   );
 };
 
-export default PostLists;
+export default OurBlogPostLists;
