@@ -4,7 +4,7 @@ export default async function SignIn() {
   return (
     <div className='h-screen justify-end bg-green500 md:flex'>
       <div className='flex h-[40%] md:h-full w-full md:w-[40%] rounded-b-[20px] md:rounded-l-[20px] bg-green300 md:hidden'>
-        <div className='flex h-[70%] h-fit w-full items-end justify-center'>
+        <div className='flex h-[70%] w-full items-end justify-center'>
           <p className='font-[Castoro] text-[28px] italic text-white'>
             a Board
           </p>
@@ -29,7 +29,7 @@ export default async function SignIn() {
         </form>
       </div>
       <div className='hidden h-full w-[40%] rounded-l-[20px] bg-green300 md:flex'>
-        <div className='flex h-[70%] h-fit w-full items-end justify-center'>
+        <div className='flex h-[70%] w-full items-end justify-center'>
           <p className='font-[Castoro] text-[28px] italic text-white'>
             a Board
           </p>
