@@ -12,9 +12,7 @@ export async function fetchAllPost() {
 
 export async function fetchPostOfUser(userId: string) {
   try {
-    console.log('userId', userId);
     const response = await api.get(`/post/user/${userId}`);
-    console.log('response', response);
     return response.data;
   } catch (error) {
     console.error('Error fetching assignments:', error);
@@ -23,7 +21,6 @@ export async function fetchPostOfUser(userId: string) {
 
 export async function editPost(postData: any) {
   try {
-    console.log('postData', postData.community);
     const response = await api.put(`/post/${postData.postId}`,{
       community:  postData.community,
       topic:  postData.topic,
@@ -37,7 +34,6 @@ export async function editPost(postData: any) {
 
 export async function createPost(postData: any) {
   try {
-    console.log(postData)
     const response = await api.post('/post/create', {
       community: postData.community,
       topic: postData.topic,

@@ -43,7 +43,6 @@ const NavBar = () => {
   const userId= getCookie('userId');
 
   const user = users.find((user) => user.username === username);
-  console.log('User:', user);
   return (
     <div className='z-999 text-foreground fixed relative flex h-[60px] w-full items-center justify-between bg-green500 px-[24] sm:px-[32px]'>
       <div onClick={() => redirect('/')} className='h-fit w-[69px]'>

@@ -6,19 +6,12 @@ import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import {
-  Menu,
-  ArrowRight,
-  SquarePen,
-  House,
-  MessageCircle,
   ChevronDown,
 } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import {
@@ -84,7 +77,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchAllPost().then((posts) => {
-      console.log(posts);
       setPost(posts);
     });
     fetchAllUser().then((users) => {
@@ -101,18 +93,14 @@ export default function Home() {
     createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
 
-
-
   const filterPosts = () => {
     let filteredPosts = posts;
-
 
     if (communitySelected) {
       filteredPosts = filteredPosts.filter((p) =>
         p.community?.includes(communitySelected)
       );
     }
-
 
     if (postSearch?.length >= 2) {
       filteredPosts = filteredPosts.filter((p) =>
@@ -124,8 +112,6 @@ export default function Home() {
   };
   const postsFiltered = filterPosts();
 
-
-  console.log(posts);
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
       <NavBar />

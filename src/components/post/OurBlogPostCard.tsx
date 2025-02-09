@@ -26,7 +26,6 @@ import Default from '@/components/image/Default.png';
 import { editPost, deletePost } from '@/lib/postActions';
 
 const OurBlogPostCard = ({ postList }: any) => {
-  console.log(postList);
   const communitys = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },

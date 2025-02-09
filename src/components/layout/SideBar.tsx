@@ -1,4 +1,4 @@
-import { Menu, ArrowRight, SquarePen, House } from 'lucide-react';
+import { SquarePen, House } from 'lucide-react';
 import { redirect } from 'next/navigation';
 const SideBar = () => {
   const getCookie = (name: string) => {
@@ -7,7 +7,6 @@ const SideBar = () => {
     return cookie ? cookie.split('=')[1] : null;
   };
   const userId = getCookie('userId');
-  console.log('UserId:', userId);
   return (
     <div className='hidden h-full w-[290px] bg-gray100 p-[32px] sm:flex sm:flex-col'>
       <div

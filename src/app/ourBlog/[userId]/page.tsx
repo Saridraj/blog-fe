@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
@@ -45,8 +44,8 @@ export default function OurBlog() {
   const [selectedCommunity, setSelectedCommunity] = useState<string | null>(
     null
   );
-    const [communitySelected, setCommunitySelected] = useState<string>('');
-    const [postSearch, setPostSearch] = useState<string>('');
+  const [communitySelected, setCommunitySelected] = useState<string>('');
+  const [postSearch, setPostSearch] = useState<string>('');
 
   const getCookie = (name: string) => {
     const cookies = document.cookie.split('; ');
@@ -58,7 +57,6 @@ export default function OurBlog() {
   const [post, setPost] = useState<any[]>([]);
   const [user, setUser] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
-  console.log(post);
 
   useEffect(() => {
     if (id) {
@@ -87,13 +85,11 @@ export default function OurBlog() {
   const filterPosts = () => {
     let filteredPosts = posts;
 
-
     if (communitySelected) {
       filteredPosts = filteredPosts.filter((p) =>
         p.community?.includes(communitySelected)
       );
     }
-
 
     if (postSearch?.length >= 2) {
       filteredPosts = filteredPosts.filter((p) =>
@@ -130,7 +126,7 @@ export default function OurBlog() {
             <div className='flex h-[40px] w-full'>
               <div className='h-full w-[150px] rounded-[8px] sm:w-[798px]'>
                 <Input
-                onChange={(e) => setPostSearch(e.target.value)}
+                  onChange={(e) => setPostSearch(e.target.value)}
                   className='h-full w-full placeholder-gray-500'
                   type='text'
                   placeholder='Search'
@@ -228,10 +224,7 @@ export default function OurBlog() {
                           />
                           <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
                             <DialogClose className='mb-[24px] h-[24px]'>
-                              <Button
-                      
-                                className='h-[40px] w-full border border-success text-success sm:w-[105px]'
-                              >
+                              <Button className='h-[40px] w-full border border-success text-success sm:w-[105px]'>
                                 Cancel
                               </Button>
                             </DialogClose>

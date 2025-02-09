@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Default from '@/components/image/Default.png';
 
 const PostCard = ({ postList }: any) => {
-  console.log(postList);
   return (
     <div
       onClick={() => redirect(`/postDetail/${postList.id}`)}

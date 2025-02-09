@@ -34,7 +34,6 @@ export default function PostDescription() {
   const [user, setUser] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
   const [newComment, setNewComment] = useState<string>('');
-  console.log(newComment);
 
   const handlePostComment = () => {
     postComment({
@@ -153,8 +152,8 @@ export default function PostDescription() {
                   </>
                 ) : (
                   <>
-                    <div className='flex flex-col h-[100px] w-full items-center justify-center rounded-[8px] border border-success'>
-                     <p>Please sign in to post a comment.</p>
+                    <div className='flex h-[100px] w-full flex-col items-center justify-center rounded-[8px] border border-success'>
+                      <p>Please sign in to post a comment.</p>
                       <Button
                         onClick={() => redirect('/signIn')}
                         className='h-[40px] w-[105px] bg-success text-white sm:flex'

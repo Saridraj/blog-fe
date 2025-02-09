@@ -2,7 +2,6 @@ import OurBlogPostCard from './OurBlogPostCard';
 
 
 const OurBlogPostLists = ({ postLists}: any) => {
- console.log(postLists.length);
   return (
     <div>
       <div className='flex w-full flex-wrap'>
