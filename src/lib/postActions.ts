@@ -20,3 +20,12 @@ export async function fetchPostOfUser(userId: string) {
     console.error('Error fetching assignments:', error);
   }
 }
+
+export async function editPost(postData: any) {
+  try {
+    const response = await api.post(`/post/${postData.postId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching assignments:', error);
+  }
+}

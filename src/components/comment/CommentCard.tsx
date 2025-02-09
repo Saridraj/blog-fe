@@ -5,7 +5,7 @@ const CommentCard = ({ comments }: any) => {
   //const commentOfPost = comments.filter((comment: any) => comment.postId === postList.id).length;
   console.log(comments);
   return (
-    <div className='h-fit w-full'>
+    <div className='h-fit w-full mt-4'>
       <div className='flex items-center mb-2'>
       <div className='flex'>
         <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>

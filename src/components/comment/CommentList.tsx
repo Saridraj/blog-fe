@@ -1,7 +1,6 @@
 import CommentCard from './CommentCard';
 
 const CommentLists = ({ commentLists }: any) => {
-  console.log(commentLists);
   return (
     <div>
       <div className='flex w-full flex-wrap'>
