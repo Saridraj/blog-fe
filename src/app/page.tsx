@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
@@ -39,7 +38,7 @@ import { useState, useEffect } from 'react';
 import { fetchAllPost } from '@/lib/postActions';
 import { fetchAllComment } from '@/lib/commentActions';
 import { fetchAllUser } from '@/lib/userActions';
-import { redirect } from 'next/dist/server/api-utils';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
   const getCookie = (name: string) => {
@@ -48,6 +47,7 @@ export default function Home() {
     return cookie ? cookie.split('=')[1] : null;
   };
   const username = getCookie('username');
+  const id= getCookie('userId');
 
   const community = [
     { key: 'showHistory', label: 'History' },
@@ -140,48 +140,74 @@ export default function Home() {
                       Create Post
                     </DialogTitle>
 
-                    <DialogDescription className='h-full w-full'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
-                            <p className='text-[14px]'>Choose a community</p>{' '}
-                            <ChevronDown className='w-[16px]' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='w-56 bg-white'>
-                          {community.map(({ key, label }) => (
-                            <DropdownMenuCheckboxItem
-                              key={key}
-                              checked={selectedCommunity === key}
-                              onCheckedChange={(checked) =>
-                                setSelectedCommunity(checked ? key : null)
-                              }
-                            >
-                              {label}
-                            </DropdownMenuCheckboxItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      <Input
-                        className='my-3 h-[44px] max-w-[625px]'
-                        placeholder='Title'
-                      />
-                      <Textarea
-                        className='my-3 h-[234px] max-w-[625px]'
-                        placeholder='What’s on your mind...'
-                      />
-                      <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
-                        <DialogClose className='mb-[24px] h-[24px]'>
-                          <Button className='h-[40px] w-full border border-success text-success sm:w-[105px]'>
-                            Cancel
-                          </Button>
-                        </DialogClose>
+                    {id ? (
+                      <>
+                        <DialogDescription className='h-full w-full'>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
+                                <p className='text-[14px]'>
+                                  Choose a community
+                                </p>{' '}
+                                <ChevronDown className='w-[16px]' />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className='w-56 bg-white'>
+                              {community.map(({ key, label }) => (
+                                <DropdownMenuCheckboxItem
+                                  key={key}
+                                  checked={selectedCommunity === key}
+                                  onCheckedChange={(checked) =>
+                                    setSelectedCommunity(checked ? key : null)
+                                  }
+                                >
+                                  {label}
+                                </DropdownMenuCheckboxItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <Input
+                            className='my-3 h-[44px] max-w-[625px]'
+                            placeholder='Title'
+                          />
+                          <Textarea
+                            className='my-3 h-[234px] max-w-[625px]'
+                            placeholder='What’s on your mind...'
+                          />
+                          <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
+                            <DialogClose className='mb-[24px] h-[24px]'>
+                              <Button
+                                // onClick={() => redirect('/signIn')}
+                                className='h-[40px] w-full border border-success text-success sm:w-[105px]'
+                              >
+                                Cancel
+                              </Button>
+                            </DialogClose>
 
-                        <Button className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'>
-                          Post
-                        </Button>
-                      </div>
-                    </DialogDescription>
+                            <Button
+                              // onClick={() => redirect('/signIn')}
+                              className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
+                            >
+                              Post
+                            </Button>
+                          </div>
+                        </DialogDescription>
+                      </>
+                    ) : (
+                      <>
+                        <DialogDescription className='h-full w-full'>
+                          <div className='flex h-[100px] w-full flex-col items-center justify-center rounded-[8px] border border-success'>
+                            <p>Please sign in to create new post.</p>
+                            <Button
+                              onClick={() => redirect('/signIn')}
+                              className='h-[40px] w-[105px] bg-success text-white sm:flex'
+                            >
+                              SignIn
+                            </Button>
+                          </div>
+                        </DialogDescription>
+                      </>
+                    )}
                   </DialogHeader>
                 </DialogContent>
               </Dialog>

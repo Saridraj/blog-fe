@@ -7,7 +7,7 @@ import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { useParams } from 'next/navigation';
+import { useParams, redirect } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
@@ -33,13 +33,6 @@ import { fetchAllComment } from '@/lib/commentActions';
 import { fetchAllUser } from '@/lib/userActions';
 
 export default function OurBlog() {
-  // const [showHistory, setShowHistory] = React.useState<Checked>(true);
-  // const [showFood, setShowFood] = React.useState<Checked>(false);
-  // const [showPets, setShowPets] = React.useState<Checked>(false);
-  // const [showHealth, setShowHealth] = React.useState<Checked>(false);
-  // const [showFashion, setShowFashion] = React.useState<Checked>(false);
-  // const [showExercise, setShowExercise] = React.useState<Checked>(false);
-  // const [showOthers, setShowOthers] = React.useState<Checked>(false);
   const community = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },
@@ -86,7 +79,7 @@ export default function OurBlog() {
   const posts = post.map((p) => ({
     ...p,
     comments: comments.filter((c) => c.postId === p.id),
-    createdBy: user?.filter((u) => u.id === p.createdBy)
+    createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
   const userPosts = posts.filter((p) => p.createdBy === Number(userId));
 
@@ -145,65 +138,100 @@ export default function OurBlog() {
                     <DialogTitle className='flex justify-start text-[28px]'>
                       Create Post
                     </DialogTitle>
+                    {id ? (
+                      <>
+                        <DialogDescription className='h-full w-full'>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
+                                <p className='text-[14px]'>
+                                  Choose a community
+                                </p>{' '}
+                                <ChevronDown className='w-[16px]' />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className='w-56 bg-white'>
+                              {community.map(({ key, label }) => (
+                                <DropdownMenuCheckboxItem
+                                  key={key}
+                                  checked={selectedCommunity === key}
+                                  onCheckedChange={(checked) =>
+                                    setSelectedCommunity(checked ? key : null)
+                                  }
+                                >
+                                  {label}
+                                </DropdownMenuCheckboxItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                          <Input
+                            className='my-3 h-[44px] max-w-[625px]'
+                            placeholder='Title'
+                          />
+                          <Textarea
+                            className='my-3 h-[234px] max-w-[625px]'
+                            placeholder='What’s on your mind...'
+                          />
+                          <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
+                            <DialogClose className='mb-[24px] h-[24px]'>
+                              <Button
+                                // onClick={() => redirect('/signIn')}
+                                className='h-[40px] w-full border border-success text-success sm:w-[105px]'
+                              >
+                                Cancel
+                              </Button>
+                            </DialogClose>
 
-                    <DialogDescription className='h-full w-full'>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
-                            <p className='text-[14px]'>Choose a community</p>{' '}
-                            <ChevronDown className='w-[16px]' />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className='w-56 bg-white'>
-                          {community.map(({ key, label }) => (
-                            <DropdownMenuCheckboxItem
-                              key={key}
-                              checked={selectedCommunity === key}
-                              onCheckedChange={(checked) =>
-                                setSelectedCommunity(checked ? key : null)
-                              }
+                            <Button
+                              // onClick={() => redirect('/signIn')}
+                              className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
                             >
-                              {label}
-                            </DropdownMenuCheckboxItem>
-                          ))}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      <Input
-                        className='my-3 h-[44px] max-w-[625px]'
-                        placeholder='Title'
-                      />
-                      <Textarea
-                        className='my-3 h-[234px] max-w-[625px]'
-                        placeholder='What’s on your mind...'
-                      />
-                      <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
-                        <DialogClose className='mb-[24px] h-[24px]'>
-                          <Button
-                            // onClick={() => redirect('/signIn')}
-                            className='h-[40px] w-full border border-success text-success sm:w-[105px]'
-                          >
-                            Cancel
-                          </Button>
-                        </DialogClose>
-
-                        <Button
-                          // onClick={() => redirect('/signIn')}
-                          className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
-                        >
-                          Post
-                        </Button>
-                      </div>
-                    </DialogDescription>
+                              Post
+                            </Button>
+                          </div>
+                        </DialogDescription>
+                      </>
+                    ) : (
+                      <>
+                        <DialogDescription className='h-full w-full'>
+                          <div className='flex h-[100px] w-full flex-col items-center justify-center rounded-[8px] border border-success'>
+                            <p>Please sign in to create new post.</p>
+                            <Button
+                              onClick={() => redirect('/signIn')}
+                              className='h-[40px] w-[105px] bg-success text-white sm:flex'
+                            >
+                              SignIn
+                            </Button>
+                          </div>
+                        </DialogDescription>
+                      </>
+                    )}
                   </DialogHeader>
                 </DialogContent>
               </Dialog>
             </div>
           </div>
-          <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
-            <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
-              <OurBlogPostLists postLists={posts} />
-            </div>
-          </div>
+          {id ? (
+            <>
+              <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
+                <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
+                  <OurBlogPostLists postLists={posts} />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className='flex h-[100px] w-full flex-col items-center justify-center rounded-[8px] border border-success'>
+                <p>Please sign in to view your blog.</p>
+                <Button
+                  onClick={() => redirect('/signIn')}
+                  className='h-[40px] w-[105px] bg-success text-white sm:flex'
+                >
+                  SignIn
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

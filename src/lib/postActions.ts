@@ -23,7 +23,12 @@ export async function fetchPostOfUser(userId: string) {
 
 export async function editPost(postData: any) {
   try {
-    const response = await api.post(`/post/${postData.postId}`);
+    console.log('postData', postData.community);
+    const response = await api.put(`/post/${postData.postId}`,{
+      community:  postData.community,
+      topic:  postData.topic,
+      content:  postData.content,
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching assignments:', error);

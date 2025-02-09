@@ -23,10 +23,11 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import Default from '@/components/image/Default.png';
+import { editPost } from '@/lib/postActions';
 
 const OurBlogPostCard = ({ postList }: any) => {
   console.log(postList);
-  const community = [
+  const communitys = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },
     { key: 'showPets', label: 'Pets' },
@@ -38,14 +39,33 @@ const OurBlogPostCard = ({ postList }: any) => {
   const [selectedCommunity, setSelectedCommunity] = useState<string | null>(
     null
   );
+
+  const [communityEdit, setCommunityEdit] = useState<string>(
+    postList.community
+  );
+  const [topicEdit, setTopicEdit] = useState<string>(postList.topic);
+  const [contentEdit, setContentEdit] = useState<string>(postList.content);
+  const [createdByEdit, setCreatedByEdit] = useState<string>(postList);
+
+  const handleCreateNewPostSubmit = () => {};
+
+  const handleEditPostSubmit = () => {
+    editPost({
+      postId: postList.id,
+      community:communityEdit,
+      topic: topicEdit,
+      content: contentEdit,
+      createdBy: postList.createdBy[0]?.id,
+    })
+
+  };
+
+  const handleDeletePostSubmit = () => {};
   return (
-    <div
-      //onClick={() => redirect(`/postDetail/${postList.id}`)}
-      className='h-[200px] w-full p-[20px]'
-    >
+    <div className='h-[200px] w-full p-[20px]'>
       <div className='flex h-[31px] w-full items-center justify-between'>
         <div className='flex'>
-          <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>
+          <div className='mr-[8px] h-[30px] w-[30px] overflow-hidden rounded-[50%] bg-gray300'>
             <Image
               width={30}
               height={30}
@@ -72,18 +92,19 @@ const OurBlogPostCard = ({ postList }: any) => {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
-                        <p className='text-[14px]'>Choose a community</p>{' '}
+                        <p className='text-[14px]'>{communityEdit}</p>{' '}
                         <ChevronDown className='w-[16px]' />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className='w-56 bg-white'>
-                      {community.map(({ key, label }) => (
+                      {communitys.map(({ key, label }) => (
                         <DropdownMenuCheckboxItem
                           key={key}
                           checked={selectedCommunity === key}
-                          onCheckedChange={(checked) =>
-                            setSelectedCommunity(checked ? key : null)
-                          }
+                          onCheckedChange={(checked) => {
+                            setSelectedCommunity(checked ? key : null);
+                            setCommunityEdit(checked ? label : '');
+                          }}
                         >
                           {label}
                         </DropdownMenuCheckboxItem>
@@ -91,17 +112,20 @@ const OurBlogPostCard = ({ postList }: any) => {
                     </DropdownMenuContent>
                   </DropdownMenu>
                   <Input
+                    value={topicEdit}
+                    onChange={(e) => setTopicEdit(e.target.value)}
                     className='my-3 h-[44px] max-w-[625px]'
                     placeholder='Title'
                   />
                   <Textarea
+                    value={contentEdit}
+                    onChange={(e) => setContentEdit(e.target.value)}
                     className='my-3 h-[234px] max-w-[625px]'
                     placeholder='What’s on your mind...'
                   />
                   <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
                     <DialogClose className='mb-[24px] h-[24px]'>
                       <Button
-                        // onClick={() => redirect('/signIn')}
                         className='h-[40px] w-full border border-success text-success sm:w-[105px]'
                       >
                         Cancel
@@ -109,7 +133,7 @@ const OurBlogPostCard = ({ postList }: any) => {
                     </DialogClose>
 
                     <Button
-                      // onClick={() => redirect('/signIn')}
+                      onClick={handleEditPostSubmit}
                       className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
                     >
                       Confirm
@@ -122,7 +146,7 @@ const OurBlogPostCard = ({ postList }: any) => {
 
           <Dialog>
             <DialogTrigger>
-              <div className='flex text-green300'>
+              <div className='z-999 flex text-green300'>
                 <Trash2 className='mx-2 w-[16px] cursor-pointer' />
               </div>
             </DialogTrigger>
@@ -162,22 +186,27 @@ const OurBlogPostCard = ({ postList }: any) => {
           </Dialog>
         </div>
       </div>
-      <div className='mt-[8px] h-[24px] w-full'>
-        <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
-          <p className='text-[12px]'>{postList.community}</p>
+      <div
+        className='cursor-pointer'
+        onClick={() => redirect(`/postDetail/${postList.id}`)}
+      >
+        <div className='mt-[8px] h-[24px] w-full'>
+          <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
+            <p className='text-[12px]'>{postList.community}</p>
+          </div>
         </div>
-      </div>
-      <div className='mt-[8px] h-[24px] w-full'>
-        <p className='truncate text-[16px] font-semibold'>{postList.topic}</p>
-      </div>
-      <div className='h-[30px] w-full overflow-hidden'>
-        <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
-          {postList.content}
-        </p>
-      </div>
-      <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
-        <MessageCircle className='w-[16px]' /> {postList.comments.length}{' '}
-        comments
+        <div className='mt-[8px] h-[24px] w-full'>
+          <p className='truncate text-[16px] font-semibold'>{postList.topic}</p>
+        </div>
+        <div className='h-[30px] w-full overflow-hidden'>
+          <p className='h-[30px] w-full text-ellipsis text-[12px] leading-[14px] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [display:-webkit-box]'>
+            {postList.content}
+          </p>
+        </div>
+        <div className='mt-[10px] flex h-[24px] w-full text-gray300'>
+          <MessageCircle className='w-[16px]' /> {postList.comments.length}{' '}
+          comments
+        </div>
       </div>
     </div>
   );
