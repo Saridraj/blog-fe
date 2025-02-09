@@ -98,7 +98,7 @@ const NavBar = () => {
       {username ? (
         <>
           <div className='flex items-center'>
-            <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'>
+            <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>
               <Image
                 width={30}
                 height={30}

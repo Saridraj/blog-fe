@@ -39,8 +39,16 @@ import { useState, useEffect } from 'react';
 import { fetchAllPost } from '@/lib/postActions';
 import { fetchAllComment } from '@/lib/commentActions';
 import { fetchAllUser } from '@/lib/userActions';
+import { redirect } from 'next/dist/server/api-utils';
 
 export default function Home() {
+  const getCookie = (name: string) => {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
+  };
+  const username = getCookie('username');
+
   const community = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },
@@ -69,44 +77,6 @@ export default function Home() {
       setComments(comments);
     });
   }, []);
-
-  // const comments = [
-  //   {
-  //     id: 1,
-  //     comment:
-  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-  //     createdBy: 'username',
-  //     postId: 1,
-  //   },
-  //   {
-  //     id: 2,
-  //     comment:
-  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-  //     createdBy: 'username',
-  //     postId: 1,
-  //   },
-  //   {
-  //     id: 3,
-  //     comment:
-  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-  //     createdBy: 'username',
-  //     postId: 2,
-  //   },
-  //   {
-  //     id: 4,
-  //     comment:
-  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-  //     createdBy: 'username',
-  //     postId: 3,
-  //   },
-  //   {
-  //     id: 5,
-  //     comment:
-  //       'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-  //     createdBy: 'username',
-  //     postId: 4,
-  //   },
-  // ];
 
   const posts = post?.map((p) => ({
     ...p,

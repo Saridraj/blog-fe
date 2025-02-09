@@ -12,7 +12,7 @@ const PostCard = ({ postList }: any) => {
       className='h-[200px] w-full cursor-pointer p-[20px]'
     >
       <div className='flex'>
-        <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'>
+        <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>
           <Image
             className='rounded-[50%]'
             width={30}

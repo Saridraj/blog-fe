@@ -1,100 +1,61 @@
 'use client';
 import * as React from 'react';
 import Image from 'next/image';
+import Default from '@/components/image/Default.png';
 import { Button } from '@/components/ui/Button';
 import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-
+import { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { MessageCircle } from 'lucide-react';
 import CommentLists from '@/components/comment/CommentList';
 import { redirect, useParams } from 'next/navigation';
-export default function PostDescription () {
+import { fetchAllPost } from '@/lib/postActions';
+import { fetchAllComment } from '@/lib/commentActions';
+import { fetchAllUser } from '@/lib/userActions';
+
+export default function PostDescription() {
   const [clickAddComment, setClickAddComment] = React.useState(false);
   console.log(clickAddComment);
   const handleAddCommentClick = () => {
     setClickAddComment(!clickAddComment);
   };
 
-  const post = [
-    {
-      id: 1,
-      topic: '1 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-      createdBy: 1,
-    },
-    {
-      id: 2,
-      topic: '2 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Food',
-    },
-    {
-      id: 3,
-      topic: '3 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'History',
-    },
-    {
-      id: 4,
-      topic: '4 The Beginning of the End of the World',
-      content:
-        'The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer sadsadsd sdasdssadsadsd',
-      community: 'Pets',
-    },
-  ];
-
-  const comments = [
-    {
-      id: 1,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 1,
-    },
-    {
-      id: 2,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 1,
-    },
-    {
-      id: 3,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 2,
-    },
-    {
-      id: 4,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 3,
-    },
-    {
-      id: 5,
-      comment:
-        'tis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, to',
-      createdBy: 'username',
-      postId: 2,
-    },
-  ];
+  const [post, setPost] = useState<any[]>([]);
+  const [user, setUser] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+console.log(newComment);
+  useEffect(() => {
+    fetchAllPost().then((posts) => {
+      setPost(posts);
+    });
+    fetchAllComment().then((comments) => {
+      setComments(comments);
+    });
+    fetchAllUser().then((users) => {
+      setUser(users);
+    });
+  }, []);
+  const comment = comments.map((p) => ({ 
+    ...p,
+   createdBy: user?.filter((u) => u.id === p.createdBy),
+  }));
+  console.log(comments);
+  console.log(comment);
 
   const posts = post.map((p) => ({
     ...p,
-    comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
+    comments: comment.filter((c) => c.postId === p.id),
+    createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
+
+  console.log(posts);
   const params = useParams();
   const postId = params?.postId;
-  const postData = posts.find((p) => p.id == Number(postId));
+  const postData = posts.find((p) => p.id == postId);
 
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
@@ -113,8 +74,15 @@ export default function PostDescription () {
           <div className='mt-8 h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
             <div className='h-fit w-full'>
               <div className='flex h-[31px] w-full items-center'>
-                <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-                <p>username</p>
+                <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>
+                  <Image
+                    width={30}
+                    height={30}
+                    alt='avatar'
+                    src={postData?.createdBy[0]?.avatarURL || Default.src}
+                  />
+                </div>
+                <p>{postData?.createdBy[0]?.username}</p>
               </div>
               <div className='mt-[8px] h-[24px] w-full'>
                 <div className='flex h-[24px] w-fit items-center rounded-[16px] bg-[#f3f3f3] px-2'>
@@ -149,12 +117,20 @@ export default function PostDescription () {
               <>
                 <div>
                   <Textarea
-                    className='h-[100px] mt-2'
+                  value={newComment}
+                    className='mt-2 h-[100px]'
                     placeholder='What’s on your mind...'
                   />
-                  <div className='flex justify-end mt-2'>
-                    <Button onClick={handleAddCommentClick} className='border border-success text-success mr-2 w-[105px] h-[40px]'>Cancel</Button>
-                    <Button className='bg-success text-white w-[105px] h-[40px]'>Post</Button>
+                  <div className='mt-2 flex justify-end'>
+                    <Button
+                      onClick={handleAddCommentClick}
+                      className='mr-2 h-[40px] w-[105px] border border-success text-success'
+                    >
+                      Cancel
+                    </Button>
+                    <Button className='h-[40px] w-[105px] bg-success text-white'>
+                      Post
+                    </Button>
                   </div>
                 </div>
               </>

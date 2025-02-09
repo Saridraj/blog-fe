@@ -45,7 +45,7 @@ const OurBlogPostCard = ({ postList }: any) => {
     >
       <div className='flex h-[31px] w-full items-center justify-between'>
         <div className='flex'>
-          <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'>
+          <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300 overflow-hidden'>
             <Image
               width={30}
               height={30}
