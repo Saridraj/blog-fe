@@ -85,7 +85,8 @@ export default function OurBlog() {
 
   const posts = post.map((p) => ({
     ...p,
-    comments: comments.filter((c) => c.postId === p.id), // Attach matching comments
+    comments: comments.filter((c) => c.postId === p.id),
+    createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
   const userPosts = posts.filter((p) => p.createdBy === Number(userId));
 

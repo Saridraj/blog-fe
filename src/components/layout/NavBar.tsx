@@ -12,11 +12,14 @@ import {
   DialogClose,
 } from '../ui/Dialog';
 import { useState, useEffect } from 'react';
-import { parseCookies } from 'nookies';
+import { fetchAllUser } from '@/lib/userActions';
+import Image from 'next/image';
+import Default from '@/components/image/Default.png';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSmScreen, setIsSmScreen] = useState(false);
+  const [users, setUser] = useState<any[]>([]);
   useEffect(() => {
     const handleResize = () => setIsSmScreen(window.innerWidth <= 640);
     handleResize();
@@ -25,12 +28,24 @@ const NavBar = () => {
   }, []);
 
   useEffect(() => {
+    fetchAllUser().then((users) => {
+      setUser(users);
+    });
     if (!isSmScreen) setIsOpen(false);
   }, [isSmScreen]);
 
+  const getCookie = (name: string) => {
+    const cookies = document.cookie.split('; ');
+    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
+    return cookie ? cookie.split('=')[1] : null;
+  };
+  const username = getCookie('username');
+
+  const user = users.find((user) => user.username === username);
+  console.log('User:', user);
   return (
     <div className='z-999 text-foreground fixed relative flex h-[60px] w-full items-center justify-between bg-green500 px-[24] sm:px-[32px]'>
-      <div    onClick={() => redirect('/')} className='h-fit w-[69px]'>
+      <div onClick={() => redirect('/')} className='h-fit w-[69px]'>
         <p className='font-[Castoro] text-[20px] italic text-white'>a Board</p>
       </div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -63,23 +78,47 @@ const NavBar = () => {
                 <p className='text-[16px]'>Our Blog</p>
               </div>
               <div>
-                <Button
-                  onClick={() => redirect('/signIn')}
-                  className='h-[40px] w-[105px] bg-success text-white sm:flex'
-                >
-                  SignIn
-                </Button>
+                {username ? (
+                  <>{username}</>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => redirect('/signIn')}
+                      className='h-[40px] w-[105px] bg-success text-white sm:flex'
+                    >
+                      SignIn
+                    </Button>
+                  </>
+                )}
               </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       </Dialog>
-      <Button
-        onClick={() => redirect('/signIn')}
-        className='hidden h-[40px] w-[105px] bg-success text-white sm:flex'
-      >
-        SignIn
-      </Button>
+      {username ? (
+        <>
+          <div className='flex items-center'>
+            <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'>
+              <Image
+                width={30}
+                height={30}
+                alt='avatar'
+                src={user?.avatarURL || Default.src}
+              />
+            </div>
+            <p className='text-white'>{user?.username}</p>
+          </div>
+        </>
+      ) : (
+        <>
+          <Button
+            onClick={() => redirect('/signIn')}
+            className='h-[40px] w-[105px] bg-success text-white sm:flex'
+          >
+            SignIn
+          </Button>
+        </>
+      )}
     </div>
   );
 };

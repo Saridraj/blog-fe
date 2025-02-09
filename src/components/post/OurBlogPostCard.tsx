@@ -21,8 +21,11 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import Image from 'next/image';
+import Default from '@/components/image/Default.png';
 
 const OurBlogPostCard = ({ postList }: any) => {
+  console.log(postList);
   const community = [
     { key: 'showHistory', label: 'History' },
     { key: 'showFood', label: 'Food' },
@@ -42,8 +45,15 @@ const OurBlogPostCard = ({ postList }: any) => {
     >
       <div className='flex h-[31px] w-full items-center justify-between'>
         <div className='flex'>
-          <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'></div>
-          <p>username</p>
+          <div className='mr-[8px] h-[30px] w-[30px] rounded-[50%] bg-gray300'>
+            <Image
+              width={30}
+              height={30}
+              alt='avatar'
+              src={postList.createdBy[0]?.avatarURL || Default.src}
+            />
+          </div>
+          <p>{postList.createdBy[0]?.username}</p>
         </div>
         <div>
           <Dialog>
@@ -129,11 +139,11 @@ const OurBlogPostCard = ({ postList }: any) => {
                     deleted, it cannot be recovered.
                   </p>
 
-                  <div className='flpxex-col flex sm:h-[40px] sm:flex-row sm:justify-center sm:gap-2 mt-8'>
+                  <div className='flpxex-col mt-8 flex sm:h-[40px] sm:flex-row sm:justify-center sm:gap-2'>
                     <DialogClose className='mb-[24px] h-[24px]'>
                       <Button
                         // onClick={() => redirect('/signIn')}
-                        className='h-[44px] w-full border border-gray500 text-gray500 sm:flex sm:w-[170px]'
+                        className='border-gray500 text-gray500 h-[44px] w-full border sm:flex sm:w-[170px]'
                       >
                         Cancel
                       </Button>

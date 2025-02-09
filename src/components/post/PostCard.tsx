@@ -2,6 +2,8 @@
 import { MessageCircle } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import Default from '@/components/image/Default.png';
+
 const PostCard = ({ postList }: any) => {
   console.log(postList);
   return (
@@ -16,7 +18,7 @@ const PostCard = ({ postList }: any) => {
             width={30}
             height={30}
             alt='avatar'
-            src={postList.createdBy[0]?.avatarURL}
+            src={postList.createdBy[0]?.avatarURL || Default.src}
           />
         </div>
         <p>{postList.createdBy[0]?.username}</p>
