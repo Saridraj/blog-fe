@@ -5,9 +5,7 @@ import NavBar from '@/components/layout/NavBar';
 import SideBar from '@/components/layout/SideBar';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import {
-  ChevronDown,
-} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -71,8 +69,9 @@ export default function Home() {
       content: newContent,
       createdBy: id,
     });
-
-    window.location.reload();
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
