@@ -33,9 +33,11 @@ import { redirect } from 'next/navigation';
 
 export default function Home() {
   const getCookie = (name: string) => {
-    const cookies = document.cookie.split('; ');
-    const cookie = cookies.find((row) => row.startsWith(`${name}=`));
-    return cookie ? cookie.split('=')[1] : null;
+    if (typeof document !== 'undefined') {
+      const cookies = document.cookie.split('; ');
+      const cookie = cookies.find((row) => row.startsWith(`${name}=`));
+      return cookie ? cookie.split('=')[1] : null;
+    }
   };
   const username = getCookie('username');
   const id = getCookie('userId');
@@ -69,9 +71,7 @@ export default function Home() {
       content: newContent,
       createdBy: id,
     });
-    if (typeof window !== 'undefined') {
-      window.location.reload();
-    }
+    window.location.reload();
   };
 
   useEffect(() => {
