@@ -162,7 +162,7 @@ export default function Home() {
                     </Button>
                   </div>
                 </DialogTrigger>
-                <DialogContent className='h-fit w-[90%] bg-white sm:max-w-[685px]'>
+                <DialogContent className='h-[90%] w-[90%] bg-white sm:max-w-[685px]'>
                   <DialogHeader>
                     <DialogTitle className='flex justify-start text-[28px]'>
                       Create Post
