@@ -12,14 +12,14 @@ const SideBar = () => {
     <div className='hidden h-full w-[290px] bg-gray100 p-[32px] sm:flex sm:flex-col'>
       <div
         onClick={() => redirect('/')}
-        className='flex h-[40px] w-[290px] cursor-pointer items-center'
+        className='flex h-[40px] w-[290px] cursor-pointer items-center cursor-pointer'
       >
         <House className='mr-2 text-[24px]' />{' '}
         <p className='text-[16px]'>Home</p>
       </div>
       <div
         onClick={() => redirect(`/ourBlog/${userId}`)}
-        className='flex h-[40px] w-[290px] cursor-pointer items-center'
+        className='flex h-[40px] w-[290px] cursor-pointer items-center cursor-pointer'
       >
         <SquarePen className='mr-2 text-[24px]' />{' '}
         <p className='text-[16px]'>Our Blog</p>

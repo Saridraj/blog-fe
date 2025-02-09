@@ -34,3 +34,27 @@ export async function editPost(postData: any) {
     console.error('Error fetching assignments:', error);
   }
 }
+
+export async function createPost(postData: any) {
+  try {
+    console.log(postData)
+    const response = await api.post('/post/create', {
+      community: postData.community,
+      topic: postData.topic,
+      content: postData.content,
+      createdBy: postData.createdBy,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching assignments:', error);
+  }
+}
+
+export async function deletePost(postId: string) {
+  try {
+    const response = await api.delete(`/post/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching assignments:', error);
+  }
+}

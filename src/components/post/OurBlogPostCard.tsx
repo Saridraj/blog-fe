@@ -23,7 +23,7 @@ import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import Image from 'next/image';
 import Default from '@/components/image/Default.png';
-import { editPost } from '@/lib/postActions';
+import { editPost, deletePost } from '@/lib/postActions';
 
 const OurBlogPostCard = ({ postList }: any) => {
   console.log(postList);
@@ -45,9 +45,6 @@ const OurBlogPostCard = ({ postList }: any) => {
   );
   const [topicEdit, setTopicEdit] = useState<string>(postList.topic);
   const [contentEdit, setContentEdit] = useState<string>(postList.content);
-  const [createdByEdit, setCreatedByEdit] = useState<string>(postList);
-
-  const handleCreateNewPostSubmit = () => {};
 
   const handleEditPostSubmit = () => {
     editPost({
@@ -55,12 +52,17 @@ const OurBlogPostCard = ({ postList }: any) => {
       community:communityEdit,
       topic: topicEdit,
       content: contentEdit,
-      createdBy: postList.createdBy[0]?.id,
     })
+    window.location.reload();
 
   };
 
-  const handleDeletePostSubmit = () => {};
+  const handleDeletePostSubmit = () => {
+    deletePost(postList.id)
+    window.location.reload();
+  };
+
+
   return (
     <div className='h-[200px] w-full p-[20px]'>
       <div className='flex h-[31px] w-full items-center justify-between'>
@@ -174,7 +176,7 @@ const OurBlogPostCard = ({ postList }: any) => {
                     </DialogClose>
 
                     <Button
-                      // onClick={() => redirect('/signIn')}
+                      onClick={handleDeletePostSubmit}
                       className='h-[44px] w-full bg-red-500 text-white sm:flex sm:w-[170px]'
                     >
                       Delete

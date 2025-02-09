@@ -40,6 +40,7 @@ const NavBar = () => {
     return cookie ? cookie.split('=')[1] : null;
   };
   const username = getCookie('username');
+  const userId= getCookie('userId');
 
   const user = users.find((user) => user.username === username);
   console.log('User:', user);
@@ -69,11 +70,11 @@ const NavBar = () => {
               <DialogClose className='mb-[24px] h-[24px] w-full'>
                 <ArrowRight className='text-[10px]' />
               </DialogClose>
-              <div className='flex h-[40px] items-center'>
+              <div     onClick={() => redirect('/')} className='flex h-[40px] items-center cursor-pointer'>
                 <House className='mr-2 text-[24px]' />{' '}
                 <p className='text-[16px]'>Home</p>
               </div>
-              <div className='flex h-[40px] items-center'>
+              <div  onClick={() => redirect(`/ourBlog/${userId}`)} className='flex h-[40px] items-center cursor-pointer'>
                 <SquarePen className='mr-2 text-[24px]' />{' '}
                 <p className='text-[16px]'>Our Blog</p>
               </div>

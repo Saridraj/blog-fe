@@ -28,7 +28,7 @@ import { DropdownMenuCheckboxItemProps } from '@radix-ui/react-dropdown-menu';
 import OurBlogPostLists from '@/components/post/OurBlogPostList';
 type Checked = DropdownMenuCheckboxItemProps['checked'];
 
-import { fetchPostOfUser } from '@/lib/postActions';
+import { fetchPostOfUser, createPost } from '@/lib/postActions';
 import { fetchAllComment } from '@/lib/commentActions';
 import { fetchAllUser } from '@/lib/userActions';
 
@@ -45,6 +45,8 @@ export default function OurBlog() {
   const [selectedCommunity, setSelectedCommunity] = useState<string | null>(
     null
   );
+    const [communitySelected, setCommunitySelected] = useState<string>('');
+    const [postSearch, setPostSearch] = useState<string>('');
 
   const getCookie = (name: string) => {
     const cookies = document.cookie.split('; ');
@@ -81,9 +83,43 @@ export default function OurBlog() {
     comments: comments.filter((c) => c.postId === p.id),
     createdBy: user?.filter((u) => u.id === p.createdBy),
   }));
-  const userPosts = posts.filter((p) => p.createdBy === Number(userId));
 
-  console.log(posts);
+  const filterPosts = () => {
+    let filteredPosts = posts;
+
+
+    if (communitySelected) {
+      filteredPosts = filteredPosts.filter((p) =>
+        p.community?.includes(communitySelected)
+      );
+    }
+
+
+    if (postSearch?.length >= 2) {
+      filteredPosts = filteredPosts.filter((p) =>
+        p.topic.toLowerCase().includes(postSearch.toLowerCase())
+      );
+    }
+
+    return filteredPosts;
+  };
+  const postsFiltered = filterPosts();
+
+  const [newCommunity, setNewCommunity] = useState<string>('');
+  const [newTopic, setNewTopic] = useState<string>('');
+  const [newContent, setNewContent] = useState<string>('');
+
+  const handleCreateNewPostSubmit = () => {
+    createPost({
+      community: newCommunity,
+      topic: newTopic,
+      content: newContent,
+      createdBy: userId,
+    });
+
+    window.location.reload();
+  };
+
   return (
     <div className='h-screen overflow-hidden bg-red-300'>
       <NavBar />
@@ -94,6 +130,7 @@ export default function OurBlog() {
             <div className='flex h-[40px] w-full'>
               <div className='h-full w-[150px] rounded-[8px] sm:w-[798px]'>
                 <Input
+                onChange={(e) => setPostSearch(e.target.value)}
                   className='h-full w-full placeholder-gray-500'
                   type='text'
                   placeholder='Search'
@@ -112,9 +149,10 @@ export default function OurBlog() {
                       <DropdownMenuCheckboxItem
                         key={key}
                         checked={selectedCommunity === key}
-                        onCheckedChange={(checked) =>
-                          setSelectedCommunity(checked ? key : null)
-                        }
+                        onCheckedChange={(checked) => {
+                          setSelectedCommunity(checked ? key : null);
+                          setCommunitySelected(checked ? label : '');
+                        }}
                       >
                         {label}
                       </DropdownMenuCheckboxItem>
@@ -144,9 +182,20 @@ export default function OurBlog() {
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button className='flex h-[40px] w-full items-center border border-success p-1 text-[14px] text-success sm:w-[195px]'>
-                                <p className='text-[14px]'>
-                                  Choose a community
-                                </p>{' '}
+                                {newCommunity !== '' ? (
+                                  <>
+                                    <p className='text-[14px]'>
+                                      {newCommunity}
+                                    </p>{' '}
+                                  </>
+                                ) : (
+                                  <>
+                                    <p className='text-[14px]'>
+                                      Choose a community
+                                    </p>{' '}
+                                  </>
+                                )}
+
                                 <ChevronDown className='w-[16px]' />
                               </Button>
                             </DropdownMenuTrigger>
@@ -155,9 +204,10 @@ export default function OurBlog() {
                                 <DropdownMenuCheckboxItem
                                   key={key}
                                   checked={selectedCommunity === key}
-                                  onCheckedChange={(checked) =>
-                                    setSelectedCommunity(checked ? key : null)
-                                  }
+                                  onCheckedChange={(checked) => {
+                                    setSelectedCommunity(checked ? key : null);
+                                    setNewCommunity(checked ? label : '');
+                                  }}
                                 >
                                   {label}
                                 </DropdownMenuCheckboxItem>
@@ -165,17 +215,21 @@ export default function OurBlog() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                           <Input
+                            value={newTopic}
+                            onChange={(e) => setNewTopic(e.target.value)}
                             className='my-3 h-[44px] max-w-[625px]'
                             placeholder='Title'
                           />
                           <Textarea
+                            value={newContent}
+                            onChange={(e) => setNewContent(e.target.value)}
                             className='my-3 h-[234px] max-w-[625px]'
                             placeholder='What’s on your mind...'
                           />
                           <div className='flex flex-col sm:h-[40px] sm:flex-row sm:justify-end sm:gap-2'>
                             <DialogClose className='mb-[24px] h-[24px]'>
                               <Button
-                                // onClick={() => redirect('/signIn')}
+                      
                                 className='h-[40px] w-full border border-success text-success sm:w-[105px]'
                               >
                                 Cancel
@@ -183,7 +237,7 @@ export default function OurBlog() {
                             </DialogClose>
 
                             <Button
-                              // onClick={() => redirect('/signIn')}
+                              onClick={handleCreateNewPostSubmit}
                               className='h-[40px] w-full bg-success text-white sm:flex sm:w-[105px]'
                             >
                               Post
@@ -215,7 +269,7 @@ export default function OurBlog() {
             <>
               <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
                 <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
-                  <OurBlogPostLists postLists={posts} />
+                  <OurBlogPostLists postLists={postsFiltered} />
                 </div>
               </div>
             </>
