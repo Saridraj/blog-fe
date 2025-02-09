@@ -83,7 +83,7 @@ const OurBlogPostCard = ({ postList }: any) => {
                 <Pencil className='mx-2 w-[16px] cursor-pointer' />
               </div>
             </DialogTrigger>
-            <DialogContent className='h-[90%] w-[90%] bg-white sm:max-w-[685px]'>
+            <DialogContent className='h-[510px] w-[90%] bg-white sm:max-w-[685px]'>
               <DialogHeader>
                 <DialogTitle className='flex justify-start text-[28px]'>
                   Edit Post

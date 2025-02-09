@@ -162,7 +162,7 @@ export default function Home() {
                     </Button>
                   </div>
                 </DialogTrigger>
-                <DialogContent className='h-[90%] w-[90%] bg-white sm:max-w-[685px]'>
+                <DialogContent className='h-[510px]  w-[90%] bg-white sm:max-w-[685px]'>
                   <DialogHeader>
                     <DialogTitle className='flex justify-start text-[28px]'>
                       Create Post
@@ -256,7 +256,7 @@ export default function Home() {
               </Dialog>
             </div>
           </div>
-          <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
+          <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798px]'>
             <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
               <PostLists postLists={postsFiltered} />
             </div>
