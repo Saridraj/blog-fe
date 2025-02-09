@@ -124,7 +124,7 @@ export default function OurBlog() {
       <div className='z-0 -mt-[60px] flex h-full pt-[60px]'>
         <SideBar />
         <div className='h-full w-full bg-gray100 p-[30px]'>
-          <div className='h-[60px] w-[798]'>
+          <div className='h-[60px] w-[798px]'>
             <div className='flex h-[40px] w-full'>
               <div className='h-full w-[150px] rounded-[8px] sm:w-[798px]'>
                 <Input
@@ -262,7 +262,7 @@ export default function OurBlog() {
           </div>
           {id ? (
             <>
-              <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798]'>
+              <div className='h-screen overflow-hidden overflow-y-auto pb-[200px] hide-scrollbar sm:w-[798px]'>
                 <div className='h-fit rounded-[16px] border-none bg-white stroke-none'>
                   <OurBlogPostLists postLists={postsFiltered} />
                 </div>
