@@ -13,3 +13,7 @@ $ pnpm install
 $ pnpm dev
 
 ```
+
+## Application URL
+[read more here](https://blog-fe-gilt.vercel.app).
+
